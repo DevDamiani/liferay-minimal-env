@@ -1,0 +1,7 @@
+node {
+	nodeVersion = "16.15.1"
+}
+
+apply plugin: 'io.github.devdamiani.gradle.liferay-minimal-env-plugin'
+
+apply plugin: "com.liferay.node"

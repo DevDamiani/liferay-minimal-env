@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<license>
+	<account-name>Liferay Activation Key</account-name>
+	<owner>Liferay Activation Key</owner>
+	<description>Liferay Activation Key</description>
+	<product-name>DXP Development</product-name>
+	<product-version>7.4</product-version>
+	<license-name>DXP Developer</license-name>
+	<license-type>developer</license-type>
+	<license-version>5</license-version>
+	<start-date>Friday, March 1, 2024 12:00:00 PM GMT</start-date>
+	<expiration-date>Saturday, March 1, 2025 12:00:00 PM GMT</expiration-date>
+	<max-http-sessions>10</max-http-sessions>
+	<key>7c423d497fab544f023d35708094a9752964b352d745391e30d3a845f56cf0cde344701d359f6a0f166abe17501d2e78569c440147137a03d6f313f5d279d26f6c8091d8a26cf064328b8441cc1d316be5e6aa97376f760e9839c27b542329d1e6d946190c91bbb5b3b2ff2de7afa160c20a8efbebc59014ec7a17062b444ec68613b5f4</key>
+</license>

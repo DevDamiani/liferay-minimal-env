@@ -1,0 +1,7 @@
+mtui-react-web-component-js:
+    name:  MTUI React Web Component JS - Dev (hot-reload)
+    baseURL: "http://localhost:8081"
+    urls:
+        - "main.bundle.js"
+    cssURLs: ""
+    useESM: true

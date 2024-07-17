@@ -1,0 +1,7 @@
+assemble:
+    - from: build/assets
+      into: static
+mtui-react-web-component-js:
+    name: MTUI React Web Component JS
+    type: globalJS
+    url: 'main.bundle.js'

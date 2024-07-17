@@ -1,0 +1,4 @@
+Bundle-Name: module-api
+Bundle-SymbolicName: module.api
+Bundle-Version: 1.0.0
+Export-Package: module.api.api
