@@ -1,12 +1,12 @@
-package io.github.devdamiani.liferayMinimal.tasks
+package io.github.devdamiani.gradle.liferayMinimal.tasks
 
-import io.github.devdamiani.liferayMinimal.utils.Command
+import io.github.devdamiani.gradle.liferayMinimal.utils.Command
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 import java.text.SimpleDateFormat
 import java.util.Date
 
-class GenerateDumpMySQL : DefaultTask() {
+abstract class GenerateDumpTask : DefaultTask() {
 
     @TaskAction
     fun init() {
@@ -20,16 +20,16 @@ class GenerateDumpMySQL : DefaultTask() {
         val cmd = Command()
 
         cmd.execute(project, listOf(
-                "docker", "compose", "-f", dockerComposeFile, "exec", "mysql", "bash", "-c",
+                "docker", "compose", "-f", dockerComposeFile, "exec", "database", "bash", "-c",
                 "mysqldump -u root -prGC9rmmG --databases lportal > 01-liferay-lite-dump-$formattedDate.sql"
         ))
 
         cmd.execute(project, listOf(
-                "find", "$workingDir/docker/mysql/dump", "-type", "f", "-name", "*.sql", "-exec", "rm", "-f", "{}", ";"
+                "find", "$workingDir/docker/database/dump", "-type", "f", "-name", "*.sql", "-exec", "rm", "-f", "{}", ";"
         ))
 
         cmd.execute(project, listOf(
-                "docker", "compose", "-f", dockerComposeFile, "cp", "mysql:/01-liferay-lite-dump-$formattedDate.sql", "$workingDir/docker/mysql/dump/"
+                "docker", "compose", "-f", dockerComposeFile, "cp", "database:/01-liferay-lite-dump-$formattedDate.sql", "$workingDir/docker/database/dump/"
         ))
 
         cmd.execute(project, listOf(

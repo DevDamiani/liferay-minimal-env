@@ -1,4 +1,4 @@
-package io.github.devdamiani.liferayMinimal.utils
+package io.github.devdamiani.gradle.liferayMinimal.utils
 
 import org.gradle.api.Project
 import java.io.File

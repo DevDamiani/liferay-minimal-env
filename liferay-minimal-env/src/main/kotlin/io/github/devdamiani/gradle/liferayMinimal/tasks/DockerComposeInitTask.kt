@@ -1,13 +1,13 @@
-package io.github.devdamiani.liferayMinimal.tasks
+package io.github.devdamiani.gradle.liferayMinimal.tasks
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.Input
 import java.io.File
 
-import io.github.devdamiani.liferayMinimal.utils.Command
+import io.github.devdamiani.gradle.liferayMinimal.utils.Command
 
-class DockerComposeInitTask : DefaultTask() {
+abstract class DockerComposeInitTask : DefaultTask() {
 
     @get:Input
     var profiles: List<String> = mutableListOf()

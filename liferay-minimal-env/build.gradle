@@ -1,8 +1,7 @@
-
-
 plugins {
     id "java-gradle-plugin"
     id "com.gradle.plugin-publish" version "1.2.1"
+    id 'maven-publish'
 
     alias(libs.plugins.jvm)
 }
@@ -19,7 +18,7 @@ dependencies {
 }
 
 group = 'io.github.devdamiani.gradle'
-version = '0.8'
+version = '0.7.0'
 
 gradlePlugin {
     website = "https://github.com/DevDamiani/liferay-minimal-env"
@@ -31,16 +30,41 @@ gradlePlugin {
             displayName = "liferayMinimal"
             description = "liferayMinimal"
             tags.addAll("liferay")
-            implementationClass = "io.github.devdamiani.gradle.LiferayMinimal.LiferayMinimalPlugin"
+            implementationClass = "io.github.devdamiani.gradle.liferayMinimal.LiferayMinimalEnvPlugin"
         }
     }
 }
 
 publishing {
     repositories {
-        maven {
-            url = uri("build/local-plugin-repository")
-        }
+        mavenLocal()
+//        maven {
+//            name = "GitHubPackages"
+//            url = "https://maven.pkg.github.com/DevDamiani/liferay-minimal-env"
+//            credentials {
+//                username = findProperty("gpr.user")
+//                password = findProperty("gpr.token")
+//            }
+//        }
     }
 }
 
+tasks.register('zipResources', Zip) {
+    from file('extra-resources')
+    archiveFileName = 'content.zip'
+    destinationDirectory = file("${project.layout.buildDirectory.get()}/zip")
+    println("${project.layout.buildDirectory.get()}/zip")
+}
+
+tasks.register('copyZipToResources', Copy) {
+    dependsOn(tasks.named('zipResources'))
+    from(tasks.named('zipResources').get().archiveFile)
+    into(file("${sourceSets.main.output.resourcesDir}"))
+}
+
+processResources {
+    dependsOn(tasks.named('copyZipToResources'))
+    from("${project.layout.buildDirectory.get()}/resources/main") {
+        include 'content.zip'
+    }
+}

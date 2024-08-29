@@ -1,11 +1,11 @@
-package io.github.devdamiani.liferayMinimal.tasks
+package io.github.devdamiani.gradle.liferayMinimal.tasks
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
-import io.github.devdamiani.liferayMinimal.utils.Command
+import io.github.devdamiani.gradle.liferayMinimal.utils.Command
 import org.gradle.api.tasks.Input
 
-open class DockerComposeStopTask : DefaultTask() {
+abstract class DockerComposeStopTask : DefaultTask() {
 
     @get:Input
     var profiles: List<String> = mutableListOf()

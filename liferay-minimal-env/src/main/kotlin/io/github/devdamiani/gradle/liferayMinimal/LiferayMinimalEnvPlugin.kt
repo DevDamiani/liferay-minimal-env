@@ -1,11 +1,11 @@
-package io.github.devdamiani.liferayMinimal
+package io.github.devdamiani.gradle.liferayMinimal
 
-import io.github.devdamiani.liferayMinimal.tasks.*
-import io.github.devdamiani.liferayMinimal.utils.SubprojectFilter
+import io.github.devdamiani.gradle.liferayMinimal.tasks.*
+import io.github.devdamiani.gradle.liferayMinimal.utils.SubprojectFilter
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
-class LiferayMinimalEnvPlugin : Plugin<Project> {
+abstract class LiferayMinimalEnvPlugin : Plugin<Project> {
 
     private val taskGroup = "Liferay minimal environment - Docker Compose"
 
@@ -46,7 +46,7 @@ class LiferayMinimalEnvPlugin : Plugin<Project> {
             it.profiles = dcprofiles
         }
 
-        project.tasks.register("createdump", GenerateDumpMySQL::class.java) {
+        project.tasks.register("createdump", GenerateDumpTask::class.java) {
             it.group = taskGroup
             it.description = "Remove old dump files and create a new one."
         }

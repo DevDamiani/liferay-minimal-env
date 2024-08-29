@@ -1,0 +1,3 @@
+// Check GETTING_STARTED.markdown for information regarding usage.
+
+apply plugin: "io.github.devdamiani.liferay-minimal-env"
