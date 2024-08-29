@@ -1,0 +1,112 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: minimal/mysql
+    build:
+      dockerfile: docker/mysql/Dockerfile
+      context: docker/mysql
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    environment:
+      - MYSQL_DATABASE=lportal
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --character-set-client-handshake=FALSE --lower-case-table-names=0
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: mysql --protocol=socket -hlocalhost -uroot -p$$MYSQL_ROOT_PASSWORD -e 'SELECT 1'
+      interval: 30s
+      retries: 60
+      timeout: 10s
+      start_period: 10s
+
+  search:
+    image: minimal/elasticsearch
+    build:
+      dockerfile: docker/elasticsearch/Dockerfile
+      context: docker/elasticsearch
+    environment:
+      - cluster.name=liferay_cluster
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "discovery.type=single-node"
+      - "node.name=es-node1"
+    volumes:
+      - elastic_state:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+
+  kibana:
+    profiles:
+      - elasticsearch
+    image: kibana:7.17.10
+    environment:
+      - ELASTICSEARCH_HOSTS=http://search:9200
+    ports:
+      - "5601:5601"
+
+  liferay:
+    image: minimal/liferay
+    deploy:
+      resources:
+        limits:
+          cpus: '8'
+    build: 
+      dockerfile: Dockerfile
+      context: build/docker
+    environment:
+      - LIFERAY_JVM_OPTS=-Xms6g -Xmx6g
+      - LIFERAY_JPDA_ENABLED=true
+      - LIFERAY_DISABLE_TRIAL_LICENSE=true
+      - LIFERAY_MODULE_PERIOD_FRAMEWORK_PERIOD_PROPERTIES_PERIOD_OSGI_PERIOD_CONSOLE=0.0.0.0:11311
+      # - LIFERAY_DATABASE_PERIOD_INDEXES_PERIOD_UPDATE_PERIOD_ON_PERIOD_STARTUP=true
+      # - LIFERAY_UPGRADE_PERIOD_DATABASE_PERIOD_AUTO_PERIOD_RUN=true
+      - LIFERAY_VIRTUAL_PERIOD_HOSTS_PERIOD_VALID_PERIOD_HOSTS=*
+      - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME=${DB_USER}
+      - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD=${DB_PASSWORD}
+      - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL=${DB_HOST}
+      - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_DRIVER_UPPERCASEC_LASS_UPPERCASEN_AME=${DB_JDBC}
+      - LIFERAY_RETRY_PERIOD_JDBC_PERIOD_ON_PERIOD_STARTUP_PERIOD_DELAY=${DB_RETRIES_DELAY}
+      - LIFERAY_RETRY_PERIOD_JDBC_PERIOD_ON_PERIOD_STARTUP_PERIOD_MAX_PERIOD_RETRIES=${DB_RETRIES_MAX}
+      - LIFERAY_PASSWORDS_PERIOD_DEFAULT_PERIOD_POLICY_PERIOD_CHANGE_PERIOD_REQUIRED=false
+      - LIFERAY_COMPANY_PERIOD_SECURITY_PERIOD_SEND_PERIOD_PASSWORD_PERIOD_RESET_PERIOD_LINK=false
+      - LIFERAY_INDEX_PERIOD_ON_PERIOD_STARTUP=true
+    ports:
+      - "8080:8080"
+      - "11311:11311"
+      - "8000:8000"
+    volumes:
+      - liferay_document_library:/opt/liferay/data/document_library
+    depends_on:
+      mysql:
+        condition: service_healthy
+      search:
+        condition: service_started
+
+  smtp:
+    profiles:
+      - smtp
+    image: gessnerfl/fake-smtp-server
+    ports:
+      - "5080:8080"  # Interface web do servidor
+      - "5081:8081"  # http management api
+      - "8025:8025"  # Porta SMTP para envio de emails (pode ser alterada)
+
+  adminer:
+    profiles:
+        - adminer
+    image: adminer
+    restart: always
+    ports:
+      - 4080:8080
+volumes:
+  liferay_document_library:
+  mysql_data:
+  elastic_state:

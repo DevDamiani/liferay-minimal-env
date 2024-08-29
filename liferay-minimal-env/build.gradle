@@ -1,0 +1,46 @@
+
+
+plugins {
+    id "java-gradle-plugin"
+    id "com.gradle.plugin-publish" version "1.2.1"
+
+    alias(libs.plugins.jvm)
+}
+
+repositories {
+    mavenLocal()
+    gradlePluginPortal()
+}
+
+dependencies {
+    testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5'
+
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+group = 'io.github.devdamiani.gradle'
+version = '0.8'
+
+gradlePlugin {
+    website = "https://github.com/DevDamiani/liferay-minimal-env"
+    vcsUrl = "https://github.com/DevDamiani/liferay-minimal-env.git"
+    plugins {
+
+        liferayMinimal {
+            id = "io.github.devdamiani.liferay-minimal-env"
+            displayName = "liferayMinimal"
+            description = "liferayMinimal"
+            tags.addAll("liferay")
+            implementationClass = "io.github.devdamiani.gradle.LiferayMinimal.LiferayMinimalPlugin"
+        }
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            url = uri("build/local-plugin-repository")
+        }
+    }
+}
+
