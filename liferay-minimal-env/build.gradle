@@ -18,7 +18,7 @@ dependencies {
 }
 
 group = 'io.github.devdamiani.gradle'
-version = '0.7.0'
+version = '0.7.2'
 
 gradlePlugin {
     website = "https://github.com/DevDamiani/liferay-minimal-env"

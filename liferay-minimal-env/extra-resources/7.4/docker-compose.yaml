@@ -116,6 +116,33 @@ services:
     ports:
       - 4080:8080 # Interface web do servidor
 
+  ldap:
+    profiles:
+    - ldap
+    image: osixia/openldap:1.5.0
+    environment:
+        - LDAP_ADMIN_USERNAME=admin
+        - LDAP_ADMIN_PASSWORD=adminpassword
+        - LDAP_USERS=customuser
+        - LDAP_PASSWORDS=custompassword
+        - LDAP_ROOT=dc=example,dc=org
+        - LDAP_ADMIN_DN=cn=admin,dc=example,dc=org
+    ports:
+        - 389:389
+        - 636:636
+  
+  ldapadmin:
+    profiles:
+      - ldap
+    image: osixia/phpldapadmin:latest
+    environment:
+      PHPLDAPADMIN_LDAP_HOSTS: "ldap"
+      PHPLDAPADMIN_HTTPS: "false"
+    ports:
+      - "6080:80"
+    depends_on:
+      - ldap
+
 volumes:
   liferay_document_library:
   database_data:
