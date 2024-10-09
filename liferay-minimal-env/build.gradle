@@ -18,7 +18,7 @@ dependencies {
 }
 
 group = 'io.github.devdamiani.gradle'
-version = '0.6.4'
+version = '0.7.0'
 
 gradlePlugin {
     website = "https://github.com/DevDamiani/liferay-minimal-env"
@@ -42,8 +42,8 @@ publishing {
             name = "GitHubPackages"
             url = "https://maven.pkg.github.com/DevDamiani/liferay-minimal-env"
             credentials {
-                username = findProperty("gpr.user")
-                password = findProperty("gpr.token")
+                username = findProperty("gpr.user") ?: System.getenv('GPR_USER')
+                password = findProperty("gpr.token") ?: System.getenv('GPR_TOKEN')
             }
         }
     }
