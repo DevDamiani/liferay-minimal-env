@@ -18,7 +18,7 @@ dependencies {
 }
 
 group = 'io.github.devdamiani.gradle'
-version = '0.7.0'
+version = '0.6.4'
 
 gradlePlugin {
     website = "https://github.com/DevDamiani/liferay-minimal-env"
@@ -38,33 +38,49 @@ gradlePlugin {
 publishing {
     repositories {
         mavenLocal()
-//        maven {
-//            name = "GitHubPackages"
-//            url = "https://maven.pkg.github.com/DevDamiani/liferay-minimal-env"
-//            credentials {
-//                username = findProperty("gpr.user")
-//                password = findProperty("gpr.token")
-//            }
-//        }
+        maven {
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/DevDamiani/liferay-minimal-env"
+            credentials {
+                username = findProperty("gpr.user")
+                password = findProperty("gpr.token")
+            }
+        }
     }
 }
 
 tasks.register('zipResources', Zip) {
+
+    def extraDir = file('extra-resources')
+
+    doFirst {
+        def outputDir = file("${project.layout.buildDirectory.get()}/zip/versions")
+        outputDir.mkdirs()
+
+        extraDir.eachDir { folder ->
+            def zipFile = new File(outputDir, "${folder.name}.zip")
+
+
+            exec {
+                commandLine 'zip', '-r', zipFile.absolutePath, "."
+                workingDir = file("extra-resources/$folder.name")
+            }
+        }
+    }
+
+
     from file('extra-resources')
     archiveFileName = 'content.zip'
     destinationDirectory = file("${project.layout.buildDirectory.get()}/zip")
-    println("${project.layout.buildDirectory.get()}/zip")
 }
 
 tasks.register('copyZipToResources', Copy) {
     dependsOn(tasks.named('zipResources'))
-    from(tasks.named('zipResources').get().archiveFile)
+    from(tasks.named('zipResources').get().destinationDirectory)
+
     into(file("${sourceSets.main.output.resourcesDir}"))
 }
 
-processResources {
+tasks.named('processResources') {
     dependsOn(tasks.named('copyZipToResources'))
-    from("${project.layout.buildDirectory.get()}/resources/main") {
-        include 'content.zip'
-    }
 }

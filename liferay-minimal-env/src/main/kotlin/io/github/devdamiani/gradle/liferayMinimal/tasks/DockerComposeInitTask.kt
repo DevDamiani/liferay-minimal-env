@@ -15,6 +15,7 @@ abstract class DockerComposeInitTask : DefaultTask() {
     @TaskAction
     fun init() {
 
+
         if (!hasDockerComposeFile()) {
             println("Creating Docker compose content...")
             applyDockerResources()
@@ -30,7 +31,11 @@ abstract class DockerComposeInitTask : DefaultTask() {
 
     private fun applyDockerResources() {
 
-        val resourceFileName = "content.zip"
+        val liferayVersion = checkLiferayVersion()
+
+        println("version: $liferayVersion")
+
+        val resourceFileName = "$liferayVersion.zip"
 
         val outputDir = project.file("${project.projectDir}/")
 
@@ -45,7 +50,7 @@ abstract class DockerComposeInitTask : DefaultTask() {
     }
 
     private fun extractResourceFile(resourceFileName: String, outputLocation: File) {
-        val inputStream = this::class.java.getResourceAsStream("/$resourceFileName")
+        val inputStream = this::class.java.getResourceAsStream("/versions/$resourceFileName")
 
         if (inputStream != null) {
             val destinationFile = File(outputLocation, resourceFileName)
@@ -89,5 +94,16 @@ abstract class DockerComposeInitTask : DefaultTask() {
         }
 
         return containsModuleFiles != null
+    }
+
+    private fun checkLiferayVersion(): String? {
+
+        val liferayVersion = project.property("liferay.workspace.product").toString()
+
+        return when {
+            liferayVersion.contains("7.3") -> "7.3"
+            liferayVersion.contains("7.4") -> "7.4"
+            else -> null
+        }
     }
 }

@@ -25,3 +25,8 @@
 /plugins-sdk/dist
 /plugins-sdk/lib
 test-results
+
+README.md
+docker-compose.yaml
+.env
+docker

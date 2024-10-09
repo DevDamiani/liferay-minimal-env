@@ -16,9 +16,9 @@ abstract class DockerComposeUpTask : DefaultTask() {
         val cmd = Command()
 
         cmd.execute(
-                project,
-                listOf("docker", "compose", "-f", dockerComposeFile, "start"),
-                profiles
+            project,
+            listOf("docker", "compose", "-f", dockerComposeFile, "up", "--build", "-d"),
+            profiles
         )
     }
 }
