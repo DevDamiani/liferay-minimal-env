@@ -27,9 +27,9 @@ gradlePlugin {
 
         liferayMinimal {
             id = "io.github.devdamiani.liferay-minimal-env"
-            displayName = "liferayMinimal"
-            description = "liferayMinimal"
-            tags.addAll("liferay")
+            displayName = "Liferay Environment Minimal Plugin"
+            description = "A Gradle plugin designed to automatically configure and provision all necessary services to create a fully functional Liferay environment. This plugin streamlines the setup process, ensuring that all components such as databases, search engines, and other dependencies are configured and ready for Liferay deployment."
+            tags.addAll("liferay", "docker")
             implementationClass = "io.github.devdamiani.gradle.liferayMinimal.LiferayMinimalEnvPlugin"
         }
     }
