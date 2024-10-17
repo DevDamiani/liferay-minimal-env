@@ -8,17 +8,33 @@ plugins {
 
 repositories {
     mavenLocal()
+    mavenCentral()
     gradlePluginPortal()
 }
 
 dependencies {
-    testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5'
+    compileOnly group: "com.liferay", name: "com.liferay.gradle.plugins.workspace", version: "10.1.7"
 
+    testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
 group = 'io.github.devdamiani.gradle'
-version = '0.7.2'
+version = '0.8.0'
 
 gradlePlugin {
     website = "https://github.com/DevDamiani/liferay-minimal-env"

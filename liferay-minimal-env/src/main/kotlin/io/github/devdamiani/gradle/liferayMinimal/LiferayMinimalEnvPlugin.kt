@@ -17,12 +17,16 @@ abstract class LiferayMinimalEnvPlugin : Plugin<Project> {
         println("Current profiles: $dcprofiles")
 
         project.tasks.register("dcinit", DockerComposeInitTask::class.java) {
+            it.dependsOn(":clean", ":deploy", ":createDockerfile")
+
             it.group = taskGroup
             it.description = "Build project and start and build Docker Compose."
             it.profiles = dcprofiles
         }
 
         project.tasks.register("dcup", DockerComposeUpTask::class.java) {
+            it.dependsOn(":deploy", ":createDockerfile")
+
             it.group = taskGroup
             it.description = "Run Docker Compose and Build Docker Images."
             it.profiles = dcprofiles
@@ -53,6 +57,8 @@ abstract class LiferayMinimalEnvPlugin : Plugin<Project> {
 
         SubprojectFilter.addTasksToSubprojects(project) { proj ->
             proj.tasks.register("dcdeploy", DockerComposeDeploy::class.java) {
+                it.dependsOn( "deploy")
+
                 it.group = taskGroup
                 it.description = "Deploy build files to the container."
             }

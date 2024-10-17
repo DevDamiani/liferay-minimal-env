@@ -24,7 +24,6 @@ abstract class DockerComposeInitTask : DefaultTask() {
         val dockerComposeFile = "${project.rootDir}/docker-compose.yaml"
         val cmd = Command()
 
-        cmd.execute(project, listOf("./gradlew", "clean", "deploy", "createdockerfile"), profiles)
         cmd.execute(project, listOf("docker", "compose", "-f", dockerComposeFile, "down", "-v"), profiles)
         cmd.execute(project, listOf("docker", "compose", "-f", dockerComposeFile, "up", "-d", "--build", "-V", "--remove-orphans"), profiles)
     }
@@ -100,10 +99,12 @@ abstract class DockerComposeInitTask : DefaultTask() {
 
         val liferayVersion = project.property("liferay.workspace.product").toString()
 
+        val liferay74 = listOf("dxp-", "7.4")
+
         return when {
             liferayVersion.contains("7.3") -> "7.3"
-            liferayVersion.contains("7.4") -> "7.4"
-            else -> null
+            liferay74.any{ liferayVersion.contains(it) } -> "7.4"
+            else -> "7.4"
         }
     }
 }

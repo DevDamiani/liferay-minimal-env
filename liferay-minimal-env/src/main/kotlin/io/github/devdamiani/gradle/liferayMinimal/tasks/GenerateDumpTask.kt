@@ -21,7 +21,7 @@ abstract class GenerateDumpTask : DefaultTask() {
 
         cmd.execute(project, listOf(
                 "docker", "compose", "-f", dockerComposeFile, "exec", "database", "bash", "-c",
-                "mysqldump -u root -prGC9rmmG --databases lportal > 01-liferay-lite-dump-$formattedDate.sql"
+                "mysqldump -u root -p\$MYSQL_ROOT_PASSWORD --databases lportal > 01-liferay-lite-dump-$formattedDate.sql"
         ))
 
         cmd.execute(project, listOf(

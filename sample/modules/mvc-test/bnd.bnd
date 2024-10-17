@@ -1,0 +1,7 @@
+Bundle-Name: mvc-test
+Bundle-SymbolicName: mvc.test
+Bundle-Version: 1.0.0
+Export-Package: mvc.test.constants
+Provide-Capability:\
+	liferay.language.resources;\
+		resource.bundle.base.name="content.Language"
