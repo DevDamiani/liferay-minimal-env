@@ -18,6 +18,16 @@ Before starting, ensure you have the following prerequisites:
 
 - **Blade CLI:** Ensure that Docker is installed on your system. You can download and install Docker from the official website [Installing Blade CLI](https://help.liferay.com/hc/en-us/articles/360017885232-Installing-Blade-CLI-).
 
+
+## Getting Started
+To set up the plugin, add the following code to the **build.gradle** file located at the root of your Liferay workspace:
+  ```groovy
+  plugins {
+    id("io.github.devdamiani.liferay-minimal-env") version "0.8.0"
+  }
+  ```
+For more details: [ liferay-minimal-env - Gradle Plugin ](https://plugins.gradle.org/plugin/io.github.devdamiani.liferay-minimal-env).
+
 ## Setting Up the Environment
 
 ### Initialize the Development Container Environment.
