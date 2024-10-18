@@ -1,9 +1,10 @@
 package io.github.devdamiani.gradle.liferayMinimal
 
+import io.github.devdamiani.gradle.liferayMinimal.extensions.DockerComposeDeployExtension
 import io.github.devdamiani.gradle.liferayMinimal.tasks.*
-import io.github.devdamiani.gradle.liferayMinimal.utils.SubprojectFilter
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.Task
 
 abstract class LiferayMinimalEnvPlugin : Plugin<Project> {
 
@@ -14,54 +15,63 @@ abstract class LiferayMinimalEnvPlugin : Plugin<Project> {
         val dcprofilesProperty = if (project.hasProperty("dc.profiles")) project.property("dc.profiles") as String else ""
         val dcprofiles = dcprofilesProperty.split(",")
 
-        println("Current profiles: $dcprofiles")
+        project.logger.quiet("[Docker Compose] Profiles: $dcprofiles")
 
-        project.tasks.register("dcinit", DockerComposeInitTask::class.java) {
-            it.dependsOn(":clean", ":deploy", ":createDockerfile")
+        val dcinitTask = project.tasks.create("dcinit", DockerComposeInitTask::class.java) {
+            it.dependsOn("clean", "createDockerfile")
 
             it.group = taskGroup
-            it.description = "Build project and start and build Docker Compose."
+            it.description = "Build project and start Docker Compose."
             it.profiles = dcprofiles
         }
 
-        project.tasks.register("dcup", DockerComposeUpTask::class.java) {
-            it.dependsOn(":deploy", ":createDockerfile")
+        project.tasks.create("dcup", DockerComposeUpTask::class.java) {
+            it.dependsOn( "dockerDeploy")
 
             it.group = taskGroup
             it.description = "Run Docker Compose and Build Docker Images."
             it.profiles = dcprofiles
         }
 
-        project.tasks.register("dcstart", DockerComposeStartTask::class.java) {
+        project.tasks.create("dcstart", DockerComposeStartTask::class.java) {
             it.group = taskGroup
             it.description = "Start Docker Compose Services."
             it.profiles = dcprofiles
         }
 
-        project.tasks.register("dcstop", DockerComposeStopTask::class.java) {
+        project.tasks.create("dcstop", DockerComposeStopTask::class.java) {
             it.group = taskGroup
             it.description = "Stop Docker Compose Services."
             it.profiles = dcprofiles
         }
 
-        project.tasks.register("dcdown", DockerComposeDownTask::class.java) {
+        project.tasks.create("dcdown", DockerComposeDownTask::class.java) {
             it.group = taskGroup
-            it.description = "Stop and Remove Docker Compose Containers."
+            it.description = "Stop and Remove Docker Compose Containers and Volumes."
             it.profiles = dcprofiles
         }
 
-        project.tasks.register("createdump", GenerateDumpTask::class.java) {
+        project.tasks.create("createdump", GenerateDumpTask::class.java) {
             it.group = taskGroup
             it.description = "Remove old dump files and create a new one."
         }
 
-        SubprojectFilter.addTasksToSubprojects(project) { proj ->
-            proj.tasks.register("dcdeploy", DockerComposeDeploy::class.java) {
-                it.dependsOn( "deploy")
+        project.subprojects { subproject ->
 
-                it.group = taskGroup
-                it.description = "Deploy build files to the container."
+            subproject.tasks.matching { it.name == "deploy" }.all { deployTask: Task ->
+
+                subproject.extensions.create("dcdeploy", DockerComposeDeployExtension::class.java)
+                subproject.logger.info("subproject with task deploy: $subproject")
+
+                subproject.tasks.create("dcdeploy", DockerComposeDeploy::class.java) {
+                    it.dependsOn("deploy")
+                    it.group = taskGroup
+                    it.description = "Deploy build files to the container."
+                }
+
+                dcinitTask.dependsOn("clean", deployTask)
             }
         }
     }
+
 }

@@ -17,7 +17,6 @@ abstract class DockerComposeInitTask : DefaultTask() {
 
 
         if (!hasDockerComposeFile()) {
-            println("Creating Docker compose content...")
             applyDockerResources()
         }
 
@@ -30,9 +29,11 @@ abstract class DockerComposeInitTask : DefaultTask() {
 
     private fun applyDockerResources() {
 
+        project.logger.quiet("[DockerComposeInitTask] Creating Docker compose content...")
+
         val liferayVersion = checkLiferayVersion()
 
-        println("version: $liferayVersion")
+        project.logger.quiet("[DockerComposeInitTask] version: $liferayVersion")
 
         val resourceFileName = "$liferayVersion.zip"
 
