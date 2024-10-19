@@ -23,7 +23,7 @@ Before starting, ensure you have the following prerequisites:
 To set up the plugin, add the following code to the **build.gradle** file located at the root of your Liferay workspace:
   ```groovy
   plugins {
-    id("io.github.devdamiani.liferay-minimal-env") version "0.8.0"
+    id("io.github.devdamiani.liferay-minimal-env") version "+"
   }
   ```
 For more details: [ liferay-minimal-env - Gradle Plugin ](https://plugins.gradle.org/plugin/io.github.devdamiani.liferay-minimal-env).
