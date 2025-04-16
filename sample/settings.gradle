@@ -1,12 +1,10 @@
 buildscript {
 	dependencies {
 		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.workspace", version: "10.1.7"
-		classpath group: "io.github.devdamiani.gradle", name: "liferay-minimal-env", version: "0.7.2"
 	}
 
 	repositories {
 		mavenLocal()
-		gradlePluginPortal()
 		maven {
 			url "https://repository-cdn.liferay.com/nexus/content/groups/public"
 		}
