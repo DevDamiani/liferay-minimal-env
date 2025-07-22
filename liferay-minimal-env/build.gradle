@@ -34,7 +34,7 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
 }
 
 group = 'io.github.devdamiani.gradle'
-version = '0.8.3'
+version = '0.8.4'
 
 gradlePlugin {
     website = "https://github.com/DevDamiani/liferay-minimal-env"

@@ -26,7 +26,7 @@ abstract class DockerComposeDeploy : DefaultTask() {
         project.fileTree(File(deployDir)).visit { details ->
             cmd.execute(
                     project,
-                    listOf("docker", "compose", "-f", dockerComposeFile, "cp", details.file.path, "liferay:/opt/liferay/deploy/")
+                    listOf("docker", "compose", "-f", dockerComposeFile, "cp", "-a", details.file.path, "liferay:/opt/liferay/deploy/")
             )
         }
 
